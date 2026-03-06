@@ -1,0 +1,39 @@
+services:
+  postgres:
+    image: postgres:18.3-alpine
+    environment:
+      POSTGRES_USER: orderly
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: orderly
+    ports:
+      - "5432:5432"
+    volumes:
+      - orderly-pgsql:/var/lib/postgresql/data
+    networks:
+      - orderly
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "orderly" ]
+      retries: 3
+      timeout: 5s
+
+  valkey:
+    image: valkey/valkey:9.0.3-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - orderly-valkey:/data
+    networks:
+      - orderly
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  orderly:
+    driver: bridge
+
+volumes:
+  orderly-pgsql:
+  orderly-valkey:
