@@ -2,9 +2,7 @@ services:
   postgres:
     image: postgres:18.3-alpine
     environment:
-      POSTGRES_USER: orderly
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: orderly
     ports:
       - "5432:5432"
     volumes:
@@ -12,7 +10,7 @@ services:
     networks:
       - orderly
     healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "orderly" ]
+      test: [ "CMD", "pg_isready", "-U", "postgres" ]
       retries: 3
       timeout: 5s
 
